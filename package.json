@@ -1,0 +1,22 @@
+{
+  "name": "own-me-contracts",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/the-digital-labs/own-me-contracts.git"
+  },
+  "author": "The Digital Labs",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/the-digital-labs/own-me-contracts/issues"
+  },
+  "homepage": "https://github.com/the-digital-labs/own-me-contracts#readme",
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.1.0"
+  }
+}
