@@ -2,12 +2,13 @@
 pragma solidity ^0.8.2;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract Nude is ERC20, Ownable {
-    constructor() ERC20("Nude", "NUDE") {}
+contract Nude is ERC20 {
+    address private owner;
+    mapping (address => uint256) balances;
 
-    function mint(address to, uint256 amount) public onlyOwner {
-        _mint(to, amount);
+    constructor(uint256 initialSupply) ERC20("Nude", "NUDE") {
+        _mint(msg.sender, initialSupply);
+        owner = msg.sender; 
     }
 }
