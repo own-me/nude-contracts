@@ -1,16 +1,11 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.2;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
 
-contract NudeNFT is ERC721, ERC721URIStorage {
-    using Counters for Counters.Counter;
-    Counters.Counter private _tokenIds;
-    mapping(string => uint8) hashes;
-
-    constructor() public ERC721("NudeNFT", "NUDENFT") {}
+contract MyToken is ERC721, ERC721URIStorage {
+    constructor() ERC721("NudeNFT", "NUDENFT") {}
 
     function _burn(uint256 tokenId)
         internal
