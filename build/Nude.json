@@ -9405,12 +9405,12 @@
         }
       },
       "links": {},
-      "address": "0x8d8F4365f9CF7c8b6B06F70B0807E82a004865e3",
-      "transactionHash": "0x41631dfeccd8e5f112a907afea25c8800f4c722bbcaa2065502d88a83c7a7283"
+      "address": "0x74676f69CEC3ba0D0e13011579781EF1481CAa34",
+      "transactionHash": "0xe0c36175944a3aea2013ef2ce8056a1370b578023859975ec14b75fcb34dd923"
     }
   },
-  "schemaVersion": "3.4.1",
-  "updatedAt": "2021-07-25T04:20:01.039Z",
+  "schemaVersion": "3.4.2",
+  "updatedAt": "2021-08-07T04:29:39.460Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",
