@@ -5,10 +5,10 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract Nude is ERC20 {
     address private owner;
-    mapping (address => uint256) balances;
+    uint256 public initialSupply = 69696969;
 
-    constructor(uint256 initialSupply) ERC20("Nude", "NUDE") {
-        _mint(msg.sender, initialSupply);
+    constructor() ERC20("Nude", "NUDE") {
+        _mint(msg.sender, initialSupply * (10 ** decimals()));
         owner = msg.sender; 
     }
 }
