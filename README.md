@@ -18,6 +18,10 @@ Operates the NudeNFT Auctionhouse.
 
 1.) `npm install -g truffle`
 
+## Deploy
+
+`truffle deploy --network ropsten`
+
 ## Community
 
 ![Navbar](https://user-images.githubusercontent.com/27584221/137842947-f80ab90a-cbba-4382-b729-dfb94e0e32f0.png)
