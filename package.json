@@ -18,11 +18,11 @@
   },
   "homepage": "https://github.com/the-digital-labs/own-me-contracts#readme",
   "dependencies": {
-    "@openzeppelin/contracts": "^4.3.1",
-    "@truffle/hdwallet-provider": "^1.5.0"
+    "@openzeppelin/contracts": "^4.3.3",
+    "@truffle/hdwallet-provider": "^1.6.0"
   },
   "devDependencies": {
     "ganache-cli": "^6.12.2",
-    "truffle": "^5.4.9"
+    "truffle": "^5.4.19"
   }
 }
