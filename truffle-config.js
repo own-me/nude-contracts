@@ -15,7 +15,7 @@ module.exports = {
             network_id: 3,
             gas: 5500000,
             confirmations: 2,
-            timeoutBlocks: 200,
+            timeoutBlocks: 1000,
             skipDryRun: true
         },
     },
@@ -23,7 +23,7 @@ module.exports = {
     },
     compilers: {
         solc: {
-            version: "^0.8.7",
+            version: "^0.8.10",
         }
     },
 };

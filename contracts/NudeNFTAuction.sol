@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.7;
+pragma solidity ^0.8.10;
 
 contract NudeNFTAuction {
     // Parameters of the auction. Times are either
