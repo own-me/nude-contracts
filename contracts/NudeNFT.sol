@@ -11,19 +11,23 @@ contract NudeNFT is ERC721, ERC721URIStorage, Ownable {
 
     Counters.Counter private _tokenIdCounter;
 
+    mapping(uint256 => uint256) private tokenPrices;
+
     constructor() ERC721("NudeNFT", "NUDENFT") {}
 
-    event newNFTMinted(address recipient, uint256 tokenId, string tokenURI);
+    event newNFTMinted(address recipient, uint256 tokenId, string tokenURI, uint256 price);
 
-    function mintNFT(address recipient, string memory tokenURI)
+    function mintNFT(address recipient, string memory tokenURI, uint256 price)
         public
         returns (uint256)
     {
+        require(price > 0, "Price must be greater than 0");
         _tokenIdCounter.increment();
         uint256 newItemId = _tokenIdCounter.current();
         _safeMint(recipient, newItemId);
         _setTokenURI(newItemId, tokenURI);
-        emit newNFTMinted(recipient, newItemId, tokenURI);
+        tokenPrices[newItemId] = price;
+        emit newNFTMinted(recipient, newItemId, tokenURI, price);
         return newItemId;
     }
 
