@@ -14,8 +14,9 @@ const config: HardhatUserConfig = {
   networks: {
     ropsten: {
       url: process.env.ROPSTEN_URL || "",
-      accounts:
-        process.env.MNEMOMIC !== undefined ? [process.env.MNEMOMIC] : [],
+      accounts: {
+        mnemonic: process.env.MNEMONIC || "",
+      },
     },
   },
   gasReporter: {
