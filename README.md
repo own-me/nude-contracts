@@ -14,6 +14,14 @@ Used to store a creator's content as a non-fungible item.
 
 Operates the NudeNFT Auctionhouse.
 
+## Contract Addresses
+
+### Ropsten
+
+`NUDE`: 0x114fa4f02b94e92fd3a40fe27f6a795c9e425f66
+
+`NUDE_NFT`: 0x114Fa4F02B94E92fd3A40fe27F6a795C9e425f66
+
 ## Dev Setup
 
 1.) `npm install`
