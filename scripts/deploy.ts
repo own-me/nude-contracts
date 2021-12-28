@@ -11,7 +11,7 @@ async function main() {
   await nudeNFT.deployed();
 
   console.log("NUDE deployed to:", nude.address);
-  console.log("NUDE_NFT deployed to:", nude.address);
+  console.log("NUDE_NFT deployed to:", nudeNFT.address);
 }
 
 main().catch((error) => {
