@@ -38,7 +38,7 @@ Operates the NudeNFT Auctionhouse.
 
 ## Verify
 
-`"npx hardhat verify --network ropsten <DEPLOYED_CONTRACT_ADDRESS>`
+`npx hardhat verify --network ropsten <DEPLOYED_CONTRACT_ADDRESS>`
 
 ## Community
 
