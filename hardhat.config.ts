@@ -1,6 +1,5 @@
 import * as dotenv from "dotenv";
 
-import { HardhatUserConfig } from "hardhat/config";
 import "@nomiclabs/hardhat-etherscan";
 import "@nomiclabs/hardhat-waffle";
 import "@typechain/hardhat";
@@ -9,11 +8,18 @@ import "solidity-coverage";
 
 dotenv.config();
 
-const config: HardhatUserConfig = {
+module.exports = {
   solidity: "0.8.11",
+  defaultNetwork: "polygonMumbai",
   networks: {
     ropsten: {
       url: process.env.ROPSTEN_URL || "",
+      accounts: {
+        mnemonic: process.env.MNEMONIC || "",
+      },
+    },
+    polygonMumbai: {
+      url: "https://rpc-mumbai.maticvigil.com",
       accounts: {
         mnemonic: process.env.MNEMONIC || "",
       },
@@ -24,8 +30,11 @@ const config: HardhatUserConfig = {
     currency: "USD",
   },
   etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY,
+    apiKey: process.env.MUMBAI_ETHERSCAN_API_KEY || "",
+    // hack until fixed in hardhat
+    // apiKey: {
+    //   ropsten: process.env.ROPSTEN_ETHERSCAN_API_KEY || "",
+    //   polygonMumbai: process.env.MUMBAI_ETHERSCAN_API_KEY || "",
+    // },
   },
 };
-
-export default config;

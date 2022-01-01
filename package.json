@@ -6,7 +6,8 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "compile": "npx hardhat compile",
-        "deploy-ropsten": "npx hardhat run --network ropsten scripts/deploy.ts"
+        "deploy-ropsten": "npx hardhat run --network ropsten scripts/deploy.ts",
+        "deploy-mumbai": "npx hardhat run --network polygonMumbai scripts/deploy.ts"
     },
     "repository": {
         "type": "git",
