@@ -1,26 +1,23 @@
 # own-me-contracts
 
-Solidity contracts for the $NUDE token, NudeNFT and NudeNFTAuctionhouse which power Own Me's adult content blockchain platform!
+Solidity contracts for the $NUDE and $NUDENFT tokens which powers Own Me's adult content NFT community!
+Built on Polygon network with Hardhat and Openzepplin.
 
-### NUDE - ERC20 Token
+### NUDE - MATIC(ERC20) Token
 
 Used as the in-app currency for all transactions.
 
-### NUDE_NFT - ERC721 Token
+### NUDE_NFT - MATIC(ERC721) Token
 
 Used to store a creator's content as a non-fungible item.
 
-### NUDE_NFT_AUCTIONHOUSE - Contract
-
-Operates the NudeNFT Auctionhouse.
-
 ## Contract Addresses
 
-### Ropsten
+### Polygon Mumbai - testnet
 
-`NUDE`: 0x363850631823D8CB2F913b90bA096C34f5AD8482
+`NUDE`: 0x7B22b4F9d5cD7881cFB6107f5D389b6F5f74229C
 
-`NUDE_NFT`: 0x4b43A0b19914dB606aa1176311AD70342e45eaDC
+`NUDE_NFT`: 0x85E9dd3521B9c2Fd7AE9B6C4C9b394f040Bea136
 
 ## Dev Setup
 
@@ -38,7 +35,7 @@ Operates the NudeNFT Auctionhouse.
 
 ## Verify
 
-`npx hardhat verify --network ropsten <DEPLOYED_CONTRACT_ADDRESS>`
+`npx hardhat verify --network polygonMumbai <DEPLOYED_CONTRACT_ADDRESS>`
 
 ## Community
 
