@@ -30,11 +30,9 @@ module.exports = {
     currency: "USD",
   },
   etherscan: {
-    apiKey: process.env.MUMBAI_ETHERSCAN_API_KEY || "",
-    // hack until fixed in hardhat
-    // apiKey: {
-    //   ropsten: process.env.ROPSTEN_ETHERSCAN_API_KEY || "",
-    //   polygonMumbai: process.env.MUMBAI_ETHERSCAN_API_KEY || "",
-    // },
+    apiKey: {
+      ropsten: process.env.ROPSTEN_ETHERSCAN_API_KEY || "",
+      polygonMumbai: process.env.MUMBAI_ETHERSCAN_API_KEY || "",
+    },
   },
 };
