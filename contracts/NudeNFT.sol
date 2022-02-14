@@ -41,12 +41,20 @@ contract NudeNFT is ERC721, ERC721URIStorage, Ownable {
         return newItemId;
     }
 
-    function buyNFT(uint256 tokenId) 
-        public 
-        payable 
-    {
-        require(msg.value >= tokenPrices[tokenId], "Insufficient gwei for purchase");
+    event newNFTBuy(
+        uint256 tokenId,
+        address buyer,
+        address seller,
+        uint256 price
+    );
+
+    function buyNFT(uint256 tokenId) public payable {
+        require(
+            msg.value >= tokenPrices[tokenId],
+            "Insufficient gwei for purchase"
+        );
         super.safeTransferFrom(ownerOf(tokenId), msg.sender, tokenId);
+        emit newNFTBuy(tokenId, msg.sender, ownerOf(tokenId), msg.value);
     }
 
     function _burn(uint256 tokenId)
@@ -65,10 +73,10 @@ contract NudeNFT is ERC721, ERC721URIStorage, Ownable {
         return super.tokenURI(tokenId);
     }
 
-    function getPrice(uint256 tokenId) 
+    function getPrice(uint256 tokenId)
         public
-        view 
-        returns (uint256) 
+        view
+        returns (uint256)
     {
         require(tokenPrices[tokenId] != 0, "Token price does not exist");
         return tokenPrices[tokenId];
