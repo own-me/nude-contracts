@@ -13,11 +13,15 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 contract NudeNFT is ERC721, ERC721URIStorage, Ownable {
     using Counters for Counters.Counter;
 
-    Counters.Counter private _tokenIdCounter;
+    Counters.Counter private tokenIdCounter;
 
     mapping(uint256 => uint256) private tokenPrices;
+    address payable private owner;
+    uint8 public tax = 69;
 
-    constructor() ERC721("NudeNFT", "NUDENFT") {}
+    constructor() ERC721("NudeNFT", "NUDENFT") {
+        owner = payable(msg.sender);
+    }
 
     event MintNFT(
         address recipient,
@@ -32,10 +36,10 @@ contract NudeNFT is ERC721, ERC721URIStorage, Ownable {
         uint256 price
     ) public returns (uint256) {
         require(price > 0, "Price must be greater than 0");
-        _tokenIdCounter.increment();
-        uint256 newItemId = _tokenIdCounter.current();
-        _safeMint(recipient, newItemId);
-        _setTokenURI(newItemId, tokenURI);
+        tokenIdCounter.increment();
+        uint256 newItemId = tokenIdCounter.current();
+        super._safeMint(recipient, newItemId);
+        super._setTokenURI(newItemId, tokenURI);
         tokenPrices[newItemId] = price;
         emit MintNFT(recipient, newItemId, tokenURI, price);
         return newItemId;
@@ -54,6 +58,7 @@ contract NudeNFT is ERC721, ERC721URIStorage, Ownable {
             "Insufficient gwei for purchase"
         );
         super.safeTransferFrom(ownerOf(tokenId), msg.sender, tokenId);
+        payable(ownerOf(tokenId)).transfer(msg.value - (msg.value * (tax / 1000)));
         emit BuyNFT(tokenId, msg.sender, ownerOf(tokenId), msg.value);
     }
 
