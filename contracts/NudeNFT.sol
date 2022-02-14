@@ -16,11 +16,11 @@ contract NudeNFT is ERC721, ERC721URIStorage, Ownable {
     Counters.Counter private tokenIdCounter;
 
     mapping(uint256 => uint256) private tokenPrices;
-    address payable private owner;
+    address payable private contractOwner;
     uint8 public tax = 69;
 
     constructor() ERC721("NudeNFT", "NUDENFT") {
-        owner = payable(msg.sender);
+        contractOwner = payable(msg.sender);
     }
 
     event MintNFT(
