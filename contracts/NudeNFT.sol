@@ -19,7 +19,7 @@ contract NudeNFT is ERC721, ERC721URIStorage, Ownable {
 
     constructor() ERC721("NudeNFT", "NUDENFT") {}
 
-    event newNFTMinted(
+    event MintNFT(
         address recipient,
         uint256 tokenId,
         string tokenURI,
@@ -37,11 +37,11 @@ contract NudeNFT is ERC721, ERC721URIStorage, Ownable {
         _safeMint(recipient, newItemId);
         _setTokenURI(newItemId, tokenURI);
         tokenPrices[newItemId] = price;
-        emit newNFTMinted(recipient, newItemId, tokenURI, price);
+        emit MintNFT(recipient, newItemId, tokenURI, price);
         return newItemId;
     }
 
-    event newNFTBuy(
+    event BuyNFT(
         uint256 tokenId,
         address buyer,
         address seller,
@@ -54,7 +54,7 @@ contract NudeNFT is ERC721, ERC721URIStorage, Ownable {
             "Insufficient gwei for purchase"
         );
         super.safeTransferFrom(ownerOf(tokenId), msg.sender, tokenId);
-        emit newNFTBuy(tokenId, msg.sender, ownerOf(tokenId), msg.value);
+        emit BuyNFT(tokenId, msg.sender, ownerOf(tokenId), msg.value);
     }
 
     function _burn(uint256 tokenId)
