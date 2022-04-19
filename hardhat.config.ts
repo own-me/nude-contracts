@@ -3,36 +3,34 @@ import * as dotenv from "dotenv";
 import "@nomiclabs/hardhat-etherscan";
 import "@nomiclabs/hardhat-waffle";
 import "@typechain/hardhat";
-import "hardhat-gas-reporter";
 import "solidity-coverage";
+
+import "@matterlabs/hardhat-zksync-deploy";
+import "@matterlabs/hardhat-zksync-solc";
 
 dotenv.config();
 
 module.exports = {
-  solidity: "0.8.11",
-  defaultNetwork: "polygonMumbai",
+  solidity: "0.8.13",
+  zksolc: {
+    version: "0.3.1",
+    compilerSource: "docker",
+    settings: {
+      optimizer: {
+        enabled: true,
+      },
+      experimental: {
+        dockerImage: "matterlabs/zksolc",
+      },
+    },
+  },
+  zkSyncDeploy: {
+    zkSyncNetwork: "https://zksync2-testnet.zksync.dev",
+    ethNetwork: "goerli",
+  },
   networks: {
-    ropsten: {
-      url: process.env.ROPSTEN_URL || "",
-      accounts: {
-        mnemonic: process.env.MNEMONIC || "",
-      },
-    },
-    polygonMumbai: {
-      url: "https://rpc-mumbai.maticvigil.com",
-      accounts: {
-        mnemonic: process.env.MNEMONIC || "",
-      },
-    },
-  },
-  gasReporter: {
-    enabled: process.env.REPORT_GAS !== undefined,
-    currency: "USD",
-  },
-  etherscan: {
-    apiKey: {
-      ropsten: process.env.ROPSTEN_ETHERSCAN_API_KEY || "",
-      polygonMumbai: process.env.MUMBAI_ETHERSCAN_API_KEY || "",
+    hardhat: {
+      zksync: true,
     },
   },
 };
