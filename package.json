@@ -4,7 +4,10 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
+        "local-node": "npx hardhat node",
+        "local-test": "npx hardhat test --network localhost",
+        "test": "concurrently -g \"npm run local-node\" -k \"npx wait-on http://127.0.0.1:8545/ && npm run local-test\"",
+        "test1": "npm run local-node | npm run local-test",
         "compile": "npx hardhat compile",
         "deploy-ropsten": "npx hardhat run --network ropsten scripts/deploy.ts",
         "deploy-mumbai": "npx hardhat run --network polygonMumbai scripts/deploy.ts"
@@ -32,6 +35,7 @@
         "@typescript-eslint/eslint-plugin": "^5.19.0",
         "@typescript-eslint/parser": "^5.19.0",
         "chai": "^4.3.6",
+        "concurrently": "^7.1.0",
         "dotenv": "^16.0.0",
         "eslint": "^8.13.0",
         "eslint-config-prettier": "^8.5.0",
@@ -50,6 +54,7 @@
         "solidity-coverage": "^0.7.20",
         "ts-node": "^10.7.0",
         "typechain": "^8.0.0",
-        "typescript": "^4.6.3"
+        "typescript": "^4.6.3",
+        "wait-on": "^6.0.1"
     }
 }
