@@ -9,8 +9,11 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "./Nude.sol";
 
 contract NudeNFT is ERC721, ERC721URIStorage, Ownable {
+    using SafeMath for uint256;
     using Counters for Counters.Counter;
 
     Counters.Counter private tokenIdCounter;
@@ -18,8 +21,10 @@ contract NudeNFT is ERC721, ERC721URIStorage, Ownable {
     mapping(uint256 => uint256) private tokenPrices;
     address payable private contractOwner;
     uint8 public tax = 69;
+    Nude private nude;
 
-    constructor() ERC721("NudeNFT", "NUDENFT") {
+    constructor(address _nude) ERC721("NudeNFT", "NUDENFT") {
+        nude = Nude(_nude);
         contractOwner = payable(msg.sender);
     }
 
@@ -51,6 +56,12 @@ contract NudeNFT is ERC721, ERC721URIStorage, Ownable {
         address seller,
         uint256 price
     );
+    event BuyNFTwithToken(
+        uint256 tokenId,
+        address buyer,
+        address seller,
+        uint256 price
+    );
 
     function buyNFT(uint256 tokenId) public payable {
         require(
@@ -65,6 +76,22 @@ contract NudeNFT is ERC721, ERC721URIStorage, Ownable {
         super.safeTransferFrom(ownerOf(tokenId), msg.sender, tokenId);
         payable(ownerOf(tokenId)).transfer(msg.value - (msg.value * (tax / 1000)));
         emit BuyNFT(tokenId, msg.sender, seller, msg.value);
+    }
+
+    function buyNFTwithToken(uint256 tokenId) external {
+        require(
+            msg.sender != ownerOf(tokenId),
+            "You cannot buy your own NFT"
+        );
+        require(
+            nude.balanceOf(msg.sender) >= tokenPrices[tokenId],
+            "Insufficient NUDE for purchase"
+        );
+        address seller = ownerOf(tokenId);
+        uint256 amount = tokenPrices[tokenId];
+        nude.transferTokens(msg.sender, seller, amount); // todo: improve tax calculation
+        super.safeTransferFrom(seller, msg.sender, tokenId);
+        emit BuyNFTwithToken(tokenId, msg.sender, seller, amount);
     }
 
     function _burn(uint256 tokenId)
