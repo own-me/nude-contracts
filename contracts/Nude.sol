@@ -6,10 +6,8 @@
 pragma solidity ^0.8.11;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 contract Nude is ERC20 {
-    using SafeMath for uint256;
 
     address payable private owner;
     uint256 public initialSupply = 69696969;
@@ -24,7 +22,7 @@ contract Nude is ERC20 {
     }
 
     function buyTokens(uint256 _numberOfTokens) external payable {
-        require(msg.value == _numberOfTokens.mul(tokenRate), "Not exact amount");
+        require(msg.value == _numberOfTokens *tokenRate, "Not exact amount");
         require(balanceOf(owner) >= _numberOfTokens, "Not enough tokens");
         _transfer(owner, msg.sender, _numberOfTokens);
         tokensSold += _numberOfTokens;
