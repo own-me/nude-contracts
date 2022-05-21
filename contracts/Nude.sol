@@ -6,8 +6,9 @@
 pragma solidity ^0.8.11;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract Nude is ERC20 {
+contract Nude is ERC20, Ownable {
 
     address payable private owner;
     uint256 public initialSupply = 69696969;
@@ -34,8 +35,7 @@ contract Nude is ERC20 {
         _transfer(from, to, amount);
     }
 
-    function setTokenRate(uint256 _rate) external {
-        require(msg.sender == owner, "Only owner can set token rate");
+    function setTokenRate(uint256 _rate) external onlyOwner {
         tokenRate = _rate;
     }
 }
