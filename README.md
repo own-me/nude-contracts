@@ -1,4 +1,4 @@
-# own-me-contracts
+# nude-contracts
 
 Solidity contracts for the $NUDE and $NUDENFT tokens which powers Own Me's adult content NFT community!
 Built on Polygon network with Hardhat and Openzepplin.
