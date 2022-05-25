@@ -9,7 +9,7 @@ import "solidity-coverage";
 dotenv.config();
 
 module.exports = {
-  solidity: "0.8.11",
+  solidity: "0.8.14",
   defaultNetwork: "polygonMumbai",
   networks: {
     ropsten: {

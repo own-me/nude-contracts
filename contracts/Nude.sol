@@ -1,16 +1,15 @@
 // SPDX-License-Identifier: BSD 3-Clause
-// Own Me Inc. -CJFT
+// Own Me Inc.
 // www.ownme.io
 // Nude. MATIC Polygon ERC20 in-app currency and governance token that powers our home for adult content in the web3 metaverse.
 
-pragma solidity ^0.8.11;
+pragma solidity ^0.8.14;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract Nude is ERC20, Ownable {
 
-    address payable private owner;
     uint256 public initialSupply = 69696969;
     uint256 public tokensSold;
     uint256 private tokenRate = 10; // how many weis costs per token
@@ -19,13 +18,12 @@ contract Nude is ERC20, Ownable {
 
     constructor() ERC20("Nude", "NUDE") {
         _mint(msg.sender, initialSupply * (10 ** decimals()));
-        owner = payable(msg.sender);
     }
 
     function buyTokens(uint256 _numberOfTokens) external payable {
         require(msg.value == _numberOfTokens *tokenRate, "Not exact amount");
-        require(balanceOf(owner) >= _numberOfTokens, "Not enough tokens");
-        _transfer(owner, msg.sender, _numberOfTokens);
+        require(balanceOf(owner()) >= _numberOfTokens, "Not enough tokens");
+        _transfer(owner(), msg.sender, _numberOfTokens);
         tokensSold += _numberOfTokens;
         emit Sell(msg.sender, _numberOfTokens);
     }

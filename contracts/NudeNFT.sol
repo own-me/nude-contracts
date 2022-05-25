@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: BSD 3-Clause
-// Own Me Inc. -CJFT
+// Own Me Inc.
 // www.ownme.io
 // NudeNFT. MATIC Polygon ERC721 NFT token that powers our home for adult content in the web3 metaverse.
 
-pragma solidity ^0.8.11;
+pragma solidity ^0.8.14;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
