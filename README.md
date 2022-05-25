@@ -15,9 +15,9 @@ Used to store a creator's content as a non-fungible item.
 
 ### Polygon Mumbai - testnet
 
-`NUDE`: 0x634f11ae7E174229B39a605772C1008D6d979cdB
+`NUDE`: 0x03748D323633cb570C2F55B9F748e44ae3c4D26E
 
-`NUDE_NFT`: 0x7988Ac644935361DCae3DC7B213876F0e7F6dD64
+`NUDE_NFT`: 0xeEdF48FfB48e088AF3C36140E327f70c0b4E4E1c
 
 ## Dev Setup
 
