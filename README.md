@@ -31,11 +31,13 @@ Used to store a creator's content as a non-fungible item.
 
 ## Deploy
 
-`npm run deploy-ropsten`
+`npm run deploy`
 
 ## Verify
 
-`npx hardhat verify --network polygonMumbai <DEPLOYED_CONTRACT_ADDRESS>`
+1.) `npx hardhat verify --network polygonMumbai <DEPLOYED_NUDE_CONTRACT>`
+
+2.) `npx hardhat verify --network polygonMumbai <DEPLOYED_NUDE_NFT_CONTRACT> <DEPLOYED_NUDE_CONTRACT>`
 
 ## Join our Community
 

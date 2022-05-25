@@ -9,8 +9,7 @@
         "test": "concurrently -g \"npm run local-node\" -k \"npx wait-on http://127.0.0.1:8545/ && npm run local-test\"",
         "test1": "npm run local-node | npm run local-test",
         "compile": "npx hardhat compile",
-        "deploy-ropsten": "npx hardhat run --network ropsten scripts/deploy.ts",
-        "deploy-mumbai": "npx hardhat run --network polygonMumbai scripts/deploy.ts"
+        "deploy": "npx hardhat run --network polygonMumbai scripts/deploy.ts"
     },
     "repository": {
         "type": "git",

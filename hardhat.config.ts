@@ -10,9 +10,9 @@ dotenv.config();
 
 module.exports = {
   solidity: "0.8.14",
-  defaultNetwork: "mumbai",
+  defaultNetwork: "polygonMumbai",
   networks: {
-    mumbai: {
+    polygonMumbai: {
       url: `https://polygon-mumbai.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
       accounts: {
         mnemonic: process.env.MNEMONIC || "",
@@ -25,7 +25,7 @@ module.exports = {
   },
   etherscan: {
     apiKey: {
-      mumbai: process.env.POLYSCAN_API_KEY || "",
+      polygonMumbai: process.env.POLYSCAN_API_KEY || "",
     },
   },
 };
