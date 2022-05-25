@@ -10,16 +10,10 @@ dotenv.config();
 
 module.exports = {
   solidity: "0.8.14",
-  defaultNetwork: "polygonMumbai",
+  defaultNetwork: "mumbai",
   networks: {
-    ropsten: {
-      url: process.env.ROPSTEN_URL || "",
-      accounts: {
-        mnemonic: process.env.MNEMONIC || "",
-      },
-    },
-    polygonMumbai: {
-      url: "https://rpc-mumbai.maticvigil.com",
+    mumbai: {
+      url: `https://polygon-mumbai.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
       accounts: {
         mnemonic: process.env.MNEMONIC || "",
       },
@@ -31,8 +25,7 @@ module.exports = {
   },
   etherscan: {
     apiKey: {
-      ropsten: process.env.ROPSTEN_ETHERSCAN_API_KEY || "",
-      polygonMumbai: process.env.MUMBAI_ETHERSCAN_API_KEY || "",
+      mumbai: process.env.POLYSCAN_API_KEY || "",
     },
   },
 };
