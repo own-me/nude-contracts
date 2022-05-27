@@ -7,9 +7,9 @@
         "local-node": "npx hardhat node",
         "local-test": "npx hardhat test --network localhost",
         "test": "concurrently -g \"npm run local-node\" -k \"npx wait-on http://127.0.0.1:8545/ && npm run local-test\"",
-        "test1": "npm run local-node | npm run local-test",
         "compile": "npx hardhat compile",
-        "deploy": "npx hardhat run --network polygonMumbai scripts/deploy.ts"
+        "deploy": "npx hardhat run --network polygonMumbai scripts/deploy.ts",
+        "local-deploy": "npx hardhat run --network localhost scripts/deploy.ts"
     },
     "repository": {
         "type": "git",
