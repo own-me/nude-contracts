@@ -36,4 +36,5 @@ contract Nude is ERC20, Ownable {
     function setTokenRate(uint256 _rate) external onlyOwner {
         tokenRate = _rate;
     }
+    // todo: implement sell tokens function
 }
