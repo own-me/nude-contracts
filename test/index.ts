@@ -6,6 +6,7 @@ import { ethers } from "hardhat";
 describe("OWN ME CONTRACT TEST", function () {
   let Nude: Contract;
   let NudeNFT: Contract;
+  let NudeDEX: Contract;
   let deployer: SignerWithAddress;
   let user1: SignerWithAddress;
   let user2: SignerWithAddress;
@@ -16,9 +17,11 @@ describe("OWN ME CONTRACT TEST", function () {
     // We get the contract factory to deploy the contract
     const NudeFactory = await ethers.getContractFactory("Nude");
     const NudeNFTFactory = await ethers.getContractFactory("NudeNFT");
+    const NudeDEXFactory = await ethers.getContractFactory("NudeDEX");
     // Deploy contract
     Nude = await NudeFactory.deploy();
-    NudeNFT = await NudeNFTFactory.deploy(Nude.address);
+    NudeNFT = await NudeNFTFactory.deploy();
+    NudeDEX = await NudeDEXFactory.deploy(Nude.address, NudeNFT.address);
   });
 
   describe("Deployment and initial check", () => {
@@ -48,53 +51,77 @@ describe("OWN ME CONTRACT TEST", function () {
   });
 
   describe("Mint NFTs", () => {
-    const price = ethers.utils.parseEther("100");
     it("MintNFT should emit event", async function () {
-      expect(await NudeNFT.mintNFT(user1.address, URI, price))
+      expect(await NudeNFT.mintNFT(user1.address, URI))
         .to.emit(NudeNFT, "MintNFT")
-        .withArgs(user1.address, 1, URI, price);
-    });
-    it("Price should be able to check", async function () {
-      await NudeNFT.mintNFT(user1.address, URI, price);
-      expect(await NudeNFT.getPrice(1)).to.equal(price);
+        .withArgs(user1.address, 1, URI);
     });
   });
 
-  describe("Buy NFTs", () => {
-    const insufficientPrice = ethers.utils.parseEther("5");
-    const price = ethers.utils.parseEther("10");
-    it("Transaction test", async function () {
-      await NudeNFT.connect(user1).mintNFT(user1.address, URI, price);
-      await NudeNFT.connect(user1).approve(user2.address, 1);
-      await expect(
-        NudeNFT.connect(user1).buyNFT(1, { value: price })
-      ).to.be.revertedWith("You cannot buy your own NFT");
-      await expect(
-        NudeNFT.connect(user2).buyNFT(1, { value: insufficientPrice })
-      ).to.be.revertedWith("Insufficient gwei for purchase");
-      await expect(NudeNFT.connect(user2).buyNFT(1, { value: price }))
-        .to.emit(NudeNFT, "BuyNFT")
-        .withArgs(1, user2.address, user1.address, price);
+  describe("DEX features", () => {
+    const price = 10;
+    const tokenRate = 10;
+    const tax = 1;
+    beforeEach(async () => {
+      await NudeNFT.connect(user1).mintNFT(user1.address, URI);
+      await Nude.connect(user2).buyTokens(price, { value: price * tokenRate });
+    });
+    it("Price should be greater than zero", async function () {
+      await expect(NudeDEX.connect(user1).onSale(1, 0)).to.be.revertedWith(
+        "Price must be greater than 0"
+      );
+    });
+    it("Only owner can sale their nft", async function () {
+      await expect(NudeDEX.connect(user2).onSale(1, price)).to.be.revertedWith(
+        "Not your NFT"
+      );
+    });
+    it("Owner need Nude tokens for selling NFT on DEX", async function () {
+      await expect(NudeDEX.connect(user1).onSale(1, price)).to.be.revertedWith(
+        "Not enough tokens for tax"
+      );
+    });
+    it("Owner can sale nft on DEX", async function () {
+      await Nude.connect(user1).buyTokens(tax, { value: tax * tokenRate });
+      await NudeNFT.connect(user1).approve(NudeDEX.address, 1);
+      await Nude.connect(user1).approve(NudeDEX.address, tax);
+      await NudeDEX.connect(user1).onSale(1, price);
+      expect(await NudeNFT.ownerOf(1)).to.equal(NudeDEX.address);
+      expect(await Nude.balanceOf(NudeDEX.address)).to.equal(tax);
+    });
+    it("Owner can withdraw nft on DEX", async function () {
+      await Nude.connect(user1).buyTokens(tax, { value: tax * tokenRate });
+      await NudeNFT.connect(user1).approve(NudeDEX.address, 1);
+      await Nude.connect(user1).approve(NudeDEX.address, tax);
+      await NudeDEX.connect(user1).onSale(1, price);
+      await NudeDEX.connect(user1).takeDown(1);
+      expect(await NudeNFT.ownerOf(1)).to.equal(user1.address);
+    });
+    it("User can not withdraw others NFT", async function () {
+      await Nude.connect(user1).buyTokens(tax, { value: tax * tokenRate });
+      await NudeNFT.connect(user1).approve(NudeDEX.address, 1);
+      await Nude.connect(user1).approve(NudeDEX.address, tax);
+      await NudeDEX.connect(user1).onSale(1, price);
+      await expect(NudeDEX.connect(user2).takeDown(1)).to.be.revertedWith(
+        "Not your NFT"
+      );
+    });
+    it("User can not withdraw NFT does not on sale", async function () {
+      await expect(NudeDEX.connect(user1).takeDown(1)).to.be.revertedWith(
+        "NFT not on sale"
+      );
+    });
+    it("User can buy others nft", async function () {
+      await Nude.connect(user1).buyTokens(tax, { value: tax * tokenRate });
+      await Nude.connect(user1).approve(NudeDEX.address, tax);
+      await NudeNFT.connect(user1).approve(NudeDEX.address, 1);
+      await NudeDEX.connect(user1).onSale(1, price);
+      await Nude.connect(user2).buyTokens(tax, { value: tax * tokenRate });
+      await Nude.connect(user2).approve(NudeDEX.address, tax + price);
+      await NudeDEX.connect(user2).trade(1);
+      expect(await NudeNFT.ownerOf(1)).to.equal(user2.address);
+      expect(await Nude.balanceOf(user1.address)).to.equal(price);
     });
   });
-
-  describe("Buy NFT with Nude token", () => {
-    it("Transaction test", async function () {
-      await NudeNFT.connect(user1).mintNFT(user1.address, URI, 10);
-      await NudeNFT.connect(user1).approve(user2.address, 1);
-      await expect(
-        NudeNFT.connect(user1).buyNFTwithToken(1)
-      ).to.be.revertedWith("You cannot buy your own NFT");
-      await expect(
-        NudeNFT.connect(user2).buyNFTwithToken(1)
-      ).to.be.revertedWith("Insufficient NUDE for purchase");
-
-      await Nude.connect(user2).buyTokens(100, { value: 1000 });
-      await expect(NudeNFT.connect(user2).buyNFTwithToken(1))
-        .to.emit(NudeNFT, "BuyNFTwithToken")
-        .withArgs(1, user2.address, user1.address, 10);
-      expect(await Nude.connect(user1).balanceOf(user1.address)).to.equal(10);
-      expect(await Nude.connect(user1).balanceOf(user2.address)).to.equal(90);
-    });
-  });
+  // todo: fail cases for trade function
 });
