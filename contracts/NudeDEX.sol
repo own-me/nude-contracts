@@ -15,6 +15,7 @@ contract NudeDEX is IERC721Receiver, Ownable {
 	NudeNFT private nudeNFT;
     uint8 public tax = 10;
 
+	mapping(uint256 => uint256) private lastTradePrices;
 	mapping(uint256 => uint256) private nftPrices;
 	mapping(uint256 => address) private nftOwners;
 
@@ -78,7 +79,13 @@ contract NudeDEX is IERC721Receiver, Ownable {
 		nude.transfer(seller, price);
 		nudeNFT.approve(buyer, tokenId);
 		nudeNFT.safeTransferFrom(address(this), buyer, tokenId);
+		lastTradePrices[tokenId] = price;
 		emit Trade(buyer, seller, tokenId, price);
+	}
+
+	function getLastTradePrice(uint256 tokenId) public view returns (uint256) {
+		require(lastTradePrices[tokenId] != 0, "Last trade price does not exist");
+		return lastTradePrices[tokenId];
 	}
 
 	// May needed when we need update Nude token or NFT contract

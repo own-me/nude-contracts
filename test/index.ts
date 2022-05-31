@@ -41,11 +41,15 @@ describe("OWN ME CONTRACT TEST", function () {
   describe("Buy tokens", () => {
     it("Buy tokens fail cases", async function () {
       await expect(
-        Nude.connect(user1).buyTokens(10, { value: 0 })
+        Nude.connect(user1).buyTokens(10, {
+          value: ethers.utils.parseEther("0.1"),
+        })
       ).to.be.revertedWith("Not exact amount");
     });
     it("Should buy tokens", async function () {
-      await Nude.connect(user1).buyTokens(10, { value: 100 });
+      await Nude.connect(user1).buyTokens(10, {
+        value: ethers.utils.parseEther("1"),
+      });
       expect(await Nude.balanceOf(user1.address)).to.equal(10);
     });
   });
@@ -60,11 +64,13 @@ describe("OWN ME CONTRACT TEST", function () {
 
   describe("DEX features", () => {
     const price = 10;
-    const tokenRate = 10;
+    const tokenRate = 0.1;
     const tax = 1;
     beforeEach(async () => {
       await NudeNFT.connect(user1).mintNFT(user1.address, URI);
-      await Nude.connect(user2).buyTokens(price, { value: price * tokenRate });
+      await Nude.connect(user2).buyTokens(price, {
+        value: ethers.utils.parseEther("1"),
+      });
     });
     it("Price should be greater than zero", async function () {
       await expect(NudeDEX.connect(user1).onSale(1, 0)).to.be.revertedWith(
@@ -82,7 +88,9 @@ describe("OWN ME CONTRACT TEST", function () {
       );
     });
     it("Owner can sale nft on DEX", async function () {
-      await Nude.connect(user1).buyTokens(tax, { value: tax * tokenRate });
+      await Nude.connect(user1).buyTokens(tax, {
+        value: ethers.utils.parseEther((tax * tokenRate).toString()),
+      });
       await NudeNFT.connect(user1).approve(NudeDEX.address, 1);
       await Nude.connect(user1).approve(NudeDEX.address, tax);
       await NudeDEX.connect(user1).onSale(1, price);
@@ -90,7 +98,9 @@ describe("OWN ME CONTRACT TEST", function () {
       expect(await Nude.balanceOf(NudeDEX.address)).to.equal(tax);
     });
     it("Owner can withdraw nft on DEX", async function () {
-      await Nude.connect(user1).buyTokens(tax, { value: tax * tokenRate });
+      await Nude.connect(user1).buyTokens(tax, {
+        value: ethers.utils.parseEther((tax * tokenRate).toString()),
+      });
       await NudeNFT.connect(user1).approve(NudeDEX.address, 1);
       await Nude.connect(user1).approve(NudeDEX.address, tax);
       await NudeDEX.connect(user1).onSale(1, price);
@@ -98,7 +108,9 @@ describe("OWN ME CONTRACT TEST", function () {
       expect(await NudeNFT.ownerOf(1)).to.equal(user1.address);
     });
     it("User can not withdraw others NFT", async function () {
-      await Nude.connect(user1).buyTokens(tax, { value: tax * tokenRate });
+      await Nude.connect(user1).buyTokens(tax, {
+        value: ethers.utils.parseEther((tax * tokenRate).toString()),
+      });
       await NudeNFT.connect(user1).approve(NudeDEX.address, 1);
       await Nude.connect(user1).approve(NudeDEX.address, tax);
       await NudeDEX.connect(user1).onSale(1, price);
@@ -112,11 +124,15 @@ describe("OWN ME CONTRACT TEST", function () {
       );
     });
     it("User can buy others nft", async function () {
-      await Nude.connect(user1).buyTokens(tax, { value: tax * tokenRate });
+      await Nude.connect(user1).buyTokens(tax, {
+        value: ethers.utils.parseEther((tax * tokenRate).toString()),
+      });
       await Nude.connect(user1).approve(NudeDEX.address, tax);
       await NudeNFT.connect(user1).approve(NudeDEX.address, 1);
       await NudeDEX.connect(user1).onSale(1, price);
-      await Nude.connect(user2).buyTokens(tax, { value: tax * tokenRate });
+      await Nude.connect(user2).buyTokens(tax, {
+        value: ethers.utils.parseEther((tax * tokenRate).toString()),
+      });
       await Nude.connect(user2).approve(NudeDEX.address, tax + price);
       await NudeDEX.connect(user2).trade(1);
       expect(await NudeNFT.ownerOf(1)).to.equal(user2.address);

@@ -12,7 +12,7 @@ contract Nude is ERC20, Ownable {
 
     uint256 public initialSupply = 69696969;
     uint256 public tokensSold;
-    uint256 private tokenRate = 10; // how many weis costs per token
+    uint256 private tokenRate = 10; // how many tokens can bought with 1 eth
 
     event Sell(address _buyer, uint256 _amount);
 
@@ -21,7 +21,7 @@ contract Nude is ERC20, Ownable {
     }
 
     function buyTokens(uint256 _numberOfTokens) external payable {
-        require(msg.value == _numberOfTokens *tokenRate, "Not exact amount");
+        require(msg.value * tokenRate == _numberOfTokens * (10 ** decimals()), "Not exact amount");
         require(balanceOf(owner()) >= _numberOfTokens, "Not enough tokens");
         _transfer(owner(), msg.sender, _numberOfTokens);
         tokensSold += _numberOfTokens;
