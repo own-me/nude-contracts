@@ -32,8 +32,6 @@ contract NudeDEX is IERC721Receiver, Ownable {
 	function onSale(uint256 tokenId, uint256 price) external {
         require(price > 0, "Price must be greater than 0");
 		require(nudeNFT.ownerOf(tokenId) == msg.sender, "Not your NFT");
-		require(nude.balanceOf(msg.sender) >= ((price * tax) / 100), "Not enough tokens for tax");
-		nude.transferFrom(msg.sender, address(this), ((price * tax) / 100));
 		nudeNFT.safeTransferFrom(msg.sender, address(this), tokenId);
 		nftOwners[tokenId] = msg.sender;
 		nftPrices[tokenId] = price;

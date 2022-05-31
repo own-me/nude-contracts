@@ -14,6 +14,7 @@ async function main() {
   console.log("NUDE_NFT deployed to:", nudeNFT.address);
 
   const nudeDEX = await NudeDEX.deploy(nude.address, nudeNFT.address);
+
   await nudeDEX.deployed();
   console.log("NUDE_DEX deployed to:", nudeDEX.address);
 }
