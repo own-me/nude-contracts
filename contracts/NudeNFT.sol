@@ -9,7 +9,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
-import "./Nude.sol";
+import "./NudeDEX.sol";
 
 contract NudeNFT is ERC721, ERC721URIStorage, Ownable {
     using Counters for Counters.Counter;
@@ -17,6 +17,7 @@ contract NudeNFT is ERC721, ERC721URIStorage, Ownable {
     Counters.Counter private tokenIdCounter;
 
     address payable private contractOwner;
+    NudeDEX private dexContract;
 
     constructor() ERC721("NudeNFT", "NUDENFT") {
         contractOwner = payable(msg.sender);
@@ -54,6 +55,17 @@ contract NudeNFT is ERC721, ERC721URIStorage, Ownable {
         returns (string memory)
     {
         return super.tokenURI(tokenId);
+    }
+
+    function approveAndTransferToDEX(uint256 tokenId, uint256 price) external {
+        require(ownerOf(tokenId) == msg.sender, "not your nft");
+        require(address(dexContract) != address(0), "dex not setup yet");
+        super._approve(address(dexContract), tokenId);
+        dexContract.onSale(tokenId, price, msg.sender);
+    }
+
+    function setNudeDex(address dexAddress) external onlyOwner {
+        dexContract = NudeDEX(dexAddress);
     }
 }
 

@@ -17,6 +17,10 @@ async function main() {
 
   await nudeDEX.deployed();
   console.log("NUDE_DEX deployed to:", nudeDEX.address);
+
+  nude.setNudeDex(nudeDEX.address);
+  nudeNFT.setNudeDex(nudeDEX.address);
+  console.log("Set DEX address for token and NFT contracts");
 }
 
 main().catch((error) => {

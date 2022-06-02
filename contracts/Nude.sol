@@ -7,12 +7,15 @@ pragma solidity ^0.8.14;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "./NudeDEX.sol";
 
 contract Nude is ERC20, Ownable {
 
     uint256 public initialSupply = 69696969;
     uint256 public tokensSold;
     uint256 private tokenRate = 10; // how many tokens can bought with 1 eth
+    NudeDEX private dexContract;
+
 
     event Sell(address _buyer, uint256 _amount);
 
@@ -36,5 +39,18 @@ contract Nude is ERC20, Ownable {
     function setTokenRate(uint256 _rate) external onlyOwner {
         tokenRate = _rate;
     }
+    function getTokenRate() external view returns (uint256) {
+        return tokenRate;
+    }
+    function setNudeDex(address dexAddress) external onlyOwner {
+        dexContract = NudeDEX(dexAddress);
+    }
+
+    function approveAndBuyNFT(uint256 tokenId) external {
+        uint256 price = dexContract.getPrice(tokenId);
+        super.approve(address(dexContract), price);
+        dexContract.trade(tokenId, msg.sender);
+    }
+
     // todo: implement sell tokens function
 }

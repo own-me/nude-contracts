@@ -29,13 +29,13 @@ contract NudeDEX is IERC721Receiver, Ownable {
 	}
 
 	// owner gives nft to dex so dex can sell it
-	function onSale(uint256 tokenId, uint256 price) external {
+	function onSale(uint256 tokenId, uint256 price, address seller) external {
         require(price > 0, "Price must be greater than 0");
-		require(nudeNFT.ownerOf(tokenId) == msg.sender, "Not your NFT");
-		nudeNFT.safeTransferFrom(msg.sender, address(this), tokenId);
-		nftOwners[tokenId] = msg.sender;
+		require(nudeNFT.ownerOf(tokenId) == seller, "Not your NFT");
+		nudeNFT.safeTransferFrom(seller, address(this), tokenId);
+		nftOwners[tokenId] = seller;
 		nftPrices[tokenId] = price;
-		emit OnSaleNFT(msg.sender, tokenId, price);
+		emit OnSaleNFT(seller, tokenId, price);
 	}
 
 	// implement IERC721Receiver so contract can receive nft
@@ -65,10 +65,9 @@ contract NudeDEX is IERC721Receiver, Ownable {
 	}
 
 	// customer buys nft from dex, dex pays to nft owner
-	function trade(uint256 tokenId) external {
+	function trade(uint256 tokenId, address buyer) external {
 		require(nftOwners[tokenId] != address(0) && nftPrices[tokenId] > 0, "NFT not on sale");
 		uint256 price = nftPrices[tokenId];
-		address buyer = msg.sender;
 		require(buyer != nftOwners[tokenId], "You can't buy your own NFT");
 		require(nude.balanceOf(buyer) >= ((price * (100 + tax)) / 100), "Not enough tokens to buy nft");
 		nude.transferFrom(buyer, address(this), ((price * (100 + tax)) / 100));
