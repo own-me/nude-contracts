@@ -9,87 +9,36 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
-import "./Nude.sol";
+import "./NudeDEX.sol";
 
 contract NudeNFT is ERC721, ERC721URIStorage, Ownable {
     using Counters for Counters.Counter;
 
     Counters.Counter private tokenIdCounter;
 
-    mapping(uint256 => uint256) private tokenPrices;
     address payable private contractOwner;
-    uint8 public tax = 69;
-    Nude private nude;
+    NudeDEX private dexContract;
 
-    constructor(address _nude) ERC721("NudeNFT", "NUDENFT") {
-        nude = Nude(_nude);
+    constructor() ERC721("NudeNFT", "NUDENFT") {
         contractOwner = payable(msg.sender);
     }
 
     event MintNFT(
         address recipient,
         uint256 tokenId,
-        string tokenURI,
-        uint256 price
+        string tokenURI
     );
 
     function mintNFT(
         address recipient,
-        string memory tokenURI,
-        uint256 price
+        string memory tokenURI
     ) public returns (uint256) {
-        require(price > 0, "Price must be greater than 0");
         tokenIdCounter.increment();
         uint256 newItemId = tokenIdCounter.current();
         super._safeMint(recipient, newItemId);
         super._setTokenURI(newItemId, tokenURI);
-        tokenPrices[newItemId] = price;
-        emit MintNFT(recipient, newItemId, tokenURI, price);
+        emit MintNFT(recipient, newItemId, tokenURI);
         return newItemId;
-    }
-
-    event BuyNFT(
-        uint256 tokenId,
-        address buyer,
-        address seller,
-        uint256 price
-    );
-    event BuyNFTwithToken(
-        uint256 tokenId,
-        address buyer,
-        address seller,
-        uint256 price
-    );
-
-    function buyNFT(uint256 tokenId) public payable {
-        require(
-            msg.value >= tokenPrices[tokenId],
-            "Insufficient gwei for purchase"
-        );
-        require(
-            msg.sender != ownerOf(tokenId),
-            "You cannot buy your own NFT"
-        );
-        address seller = ownerOf(tokenId);
-        super.safeTransferFrom(ownerOf(tokenId), msg.sender, tokenId);
-        payable(ownerOf(tokenId)).transfer(msg.value - (msg.value * (tax / 1000)));
-        emit BuyNFT(tokenId, msg.sender, seller, msg.value);
-    }
-
-    function buyNFTwithToken(uint256 tokenId) external {
-        require(
-            msg.sender != ownerOf(tokenId),
-            "You cannot buy your own NFT"
-        );
-        require(
-            nude.balanceOf(msg.sender) >= tokenPrices[tokenId],
-            "Insufficient NUDE for purchase"
-        );
-        address seller = ownerOf(tokenId);
-        uint256 amount = tokenPrices[tokenId];
-        nude.transferTokens(msg.sender, seller, amount); // todo: improve tax calculation
-        super.safeTransferFrom(seller, msg.sender, tokenId);
-        emit BuyNFTwithToken(tokenId, msg.sender, seller, amount);
     }
 
     function _burn(uint256 tokenId)
@@ -108,13 +57,15 @@ contract NudeNFT is ERC721, ERC721URIStorage, Ownable {
         return super.tokenURI(tokenId);
     }
 
-    function getPrice(uint256 tokenId)
-        public
-        view
-        returns (uint256)
-    {
-        require(tokenPrices[tokenId] != 0, "Token price does not exist");
-        return tokenPrices[tokenId];
+    function approveAndTransferToDEX(uint256 tokenId, uint256 price) external {
+        require(ownerOf(tokenId) == msg.sender, "not your nft");
+        require(address(dexContract) != address(0), "dex not setup yet");
+        super._approve(address(dexContract), tokenId);
+        dexContract.onSale(tokenId, price, msg.sender);
+    }
+
+    function setNudeDex(address dexAddress) external onlyOwner {
+        dexContract = NudeDEX(dexAddress);
     }
 }
 
