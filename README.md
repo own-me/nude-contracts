@@ -15,9 +15,11 @@ Used to store a creator's content as a non-fungible item.
 
 ### Polygon Mumbai - testnet
 
-`NUDE`: [0x03748D323633cb570C2F55B9F748e44ae3c4D26E](https://mumbai.polygonscan.com/address/0x03748D323633cb570C2F55B9F748e44ae3c4D26E)
+`NUDE`: [0x2dE8A5ee0Ac45C281BC7438F2105F44db8A967f5](https://mumbai.polygonscan.com/address/0x2dE8A5ee0Ac45C281BC7438F2105F44db8A967f5)
 
-`NUDE_NFT`: [0xeEdF48FfB48e088AF3C36140E327f70c0b4E4E1c](https://mumbai.polygonscan.com/address/0xeEdF48FfB48e088AF3C36140E327f70c0b4E4E1c)
+`NUDE_NFT`: [0xE28B6FcD077E9Bbaf310aD24e9A9de4118A13aaC](https://mumbai.polygonscan.com/address/0xE28B6FcD077E9Bbaf310aD24e9A9de4118A13aaC)
+
+`NUDE_DEX`: [0x72a05114e0e57Ec5BE8b47638B01DE1f0E476F11](https://mumbai.polygonscan.com/address/0x72a05114e0e57Ec5BE8b47638B01DE1f0E476F11)
 
 ## Dev Setup
 
@@ -37,7 +39,10 @@ Used to store a creator's content as a non-fungible item.
 
 1.) `npx hardhat verify --network polygonMumbai <DEPLOYED_NUDE_CONTRACT>`
 
-2.) `npx hardhat verify --network polygonMumbai <DEPLOYED_NUDE_NFT_CONTRACT> <DEPLOYED_NUDE_CONTRACT>`
+2.) `npx hardhat verify --network polygonMumbai <DEPLOYED_NUDE_NFT_CONTRACT>`
+
+3.) `npx hardhat verify --network polygonMumbai <DEPLOYED_NUDE_DEX_CONTRACT> <DEPLOYED_NUDE_CONTRACT> <DEPLOYED_NUDE_NFT_CONTRACT>`
+
 
 ## Join our Community
 
