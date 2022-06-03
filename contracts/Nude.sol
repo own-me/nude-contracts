@@ -15,6 +15,7 @@ contract Nude is ERC20, Ownable {
     uint256 public tokensSold;
     uint256 private tokenRate = 10; // how many tokens can bought with 1 eth
     NudeDEX private dexContract;
+    uint8 public tax = 10;
 
 
     event Sell(address _buyer, uint256 _amount);
@@ -48,7 +49,7 @@ contract Nude is ERC20, Ownable {
 
     function approveAndBuyNFT(uint256 tokenId) external {
         uint256 price = dexContract.getPrice(tokenId);
-        super.approve(address(dexContract), price);
+        super.approve(address(dexContract), (price * (100 + tax)) / 100);
         dexContract.trade(tokenId, msg.sender);
     }
 
