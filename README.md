@@ -11,15 +11,19 @@ Used as the in-app currency for all transactions.
 
 Used to store a creator's content as a non-fungible item.
 
+### NUDE_DEX - MATIC(IERC721Receiver) Contract
+
+Our NFT exchange contract.
+
 ## Contract Addresses
 
 ### Polygon Mumbai - testnet
 
-`NUDE`: [0x2dE8A5ee0Ac45C281BC7438F2105F44db8A967f5](https://mumbai.polygonscan.com/address/0x2dE8A5ee0Ac45C281BC7438F2105F44db8A967f5)
+`NUDE`: [0xDca8383B473304C316f35fD6666B9f5D03FC69B3](https://mumbai.polygonscan.com/address/0xDca8383B473304C316f35fD6666B9f5D03FC69B3)
 
-`NUDE_NFT`: [0xE28B6FcD077E9Bbaf310aD24e9A9de4118A13aaC](https://mumbai.polygonscan.com/address/0xE28B6FcD077E9Bbaf310aD24e9A9de4118A13aaC)
+`NUDE_NFT`: [0x46134236bF7c53E2C520B4d86cBfa267834d06Dc](https://mumbai.polygonscan.com/address/0x46134236bF7c53E2C520B4d86cBfa267834d06Dc)
 
-`NUDE_DEX`: [0x72a05114e0e57Ec5BE8b47638B01DE1f0E476F11](https://mumbai.polygonscan.com/address/0x72a05114e0e57Ec5BE8b47638B01DE1f0E476F11)
+`NUDE_DEX`: [0xFA4b4B968Db83F1c8326204E53998422118AC75F](https://mumbai.polygonscan.com/address/0xFA4b4B968Db83F1c8326204E53998422118AC75F)
 
 ## Dev Setup
 
@@ -42,7 +46,6 @@ Used to store a creator's content as a non-fungible item.
 2.) `npx hardhat verify --network polygonMumbai <DEPLOYED_NUDE_NFT_CONTRACT>`
 
 3.) `npx hardhat verify --network polygonMumbai <DEPLOYED_NUDE_DEX_CONTRACT> <DEPLOYED_NUDE_CONTRACT> <DEPLOYED_NUDE_NFT_CONTRACT>`
-
 
 ## Join our Community
 
