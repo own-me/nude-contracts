@@ -27,14 +27,21 @@ contract Nude is ERC20, Ownable {
     }
 
     function buyTokens(uint256 _numberOfTokens) external payable {
-        require(msg.value * tokenRate == _numberOfTokens * (10**decimals()), "Not exact amount");
+        require(
+            msg.value * tokenRate == _numberOfTokens * (10**decimals()),
+            "Not exact amount"
+        );
         require(balanceOf(owner()) >= _numberOfTokens, "Not enough tokens");
         _transfer(owner(), msg.sender, _numberOfTokens);
         tokensSold += _numberOfTokens;
         emit Sell(msg.sender, _numberOfTokens);
     }
 
-    function transferTokens(address from, address to, uint256 amount) external {
+    function transferTokens(
+        address from,
+        address to,
+        uint256 amount
+    ) external {
         require(balanceOf(from) >= amount, "Not enough tokens");
         _transfer(from, to, amount);
     }

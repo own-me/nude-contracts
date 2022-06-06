@@ -19,20 +19,20 @@ contract NudeNFT is ERC721, ERC721URIStorage, Ownable {
     address payable private contractOwner;
     NudeDEX private dexContract;
 
+    event MintNFT(address recipient, uint256 tokenId, string tokenURI);
+
     constructor() ERC721("NudeNFT", "NUDENFT") {
         contractOwner = payable(msg.sender);
     }
 
-    event MintNFT(
-        address recipient,
-        uint256 tokenId,
-        string tokenURI
-    );
+    function setNudeDex(address dexAddress) external onlyOwner {
+        dexContract = NudeDEX(dexAddress);
+    }
 
-    function mintNFT(
-        address recipient,
-        string memory tokenURI
-    ) public returns (uint256) {
+    function mintNFT(address recipient, string memory tokenURI)
+        public
+        returns (uint256)
+    {
         tokenIdCounter.increment();
         uint256 newItemId = tokenIdCounter.current();
         super._safeMint(recipient, newItemId);
@@ -63,9 +63,4 @@ contract NudeNFT is ERC721, ERC721URIStorage, Ownable {
         super._approve(address(dexContract), tokenId);
         dexContract.onSale(tokenId, price, msg.sender);
     }
-
-    function setNudeDex(address dexAddress) external onlyOwner {
-        dexContract = NudeDEX(dexAddress);
-    }
 }
-
