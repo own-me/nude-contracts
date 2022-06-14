@@ -13,7 +13,7 @@ import "./NudeNFT.sol";
 contract NudeDEX is IERC721Receiver, Ownable {
     Nude private nude;
     NudeNFT private nudeNFT;
-    uint8 public tax = 10;
+    uint8 private tax = 10;
 
     mapping(uint256 => uint256) private lastTradePrices;
     mapping(uint256 => uint256) private nftPrices;
@@ -70,7 +70,7 @@ contract NudeDEX is IERC721Receiver, Ownable {
         address seller
     ) external {
         require(price > 0, "Price must be greater than 0");
-        require(nudeNFT.ownerOf(tokenId) == seller, "Not your NFT");
+        require(nudeNFT.ownerOf(tokenId) == msg.sender, "Not your NFT");
         nudeNFT.safeTransferFrom(seller, address(this), tokenId);
         nftOwners[tokenId] = seller;
         nftPrices[tokenId] = price;
@@ -121,5 +121,12 @@ contract NudeDEX is IERC721Receiver, Ownable {
         );
         nude.approve(super.owner(), amount);
         nude.transfer(super.owner(), amount);
+    }
+
+    function setTax(uint8 _tax) external onlyOwner {
+        tax = _tax;
+    }
+    function getTax() public view returns (uint8) {
+        return tax;
     }
 }

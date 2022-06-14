@@ -20,7 +20,7 @@ contract Nude is ERC20, ERC20Votes, Ownable {
 
     event Sell(address _buyer, uint256 _amount);
 
-    constructor() ERC20("Nude", "NUDE") {
+    constructor() ERC20("Nude", "NUDE") ERC20Permit("Nude") {
         _mint(msg.sender, initialSupply * (10**decimals()));
     }
 
