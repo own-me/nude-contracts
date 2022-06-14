@@ -20,6 +20,12 @@ const NEW_TAX = 20;
 // desc for proposal
 const DESC = "set tax to 20%";
 
+// vote options
+// const AGAINST = 0;
+const APPROVE = 1;
+// const ABSTAIN = 2;
+const REASON = "Just for testing";
+
 describe("OWN ME CONTRACT TEST", function () {
   let Nude: Contract;
   let NudeNFT: Contract;
@@ -154,6 +160,7 @@ describe("OWN ME CONTRACT TEST", function () {
       await transferTx.wait(1);
 
       // -------------------------------------------------- setup --------------------------------------------------
+      // This is a flow for how DAO works rather than an actual test.
       const proposerRole = await NudeTimeLock.PROPOSER_ROLE();
       const executorRole = await NudeTimeLock.EXECUTOR_ROLE();
       const adminRole = await NudeTimeLock.TIMELOCK_ADMIN_ROLE();
@@ -190,7 +197,82 @@ describe("OWN ME CONTRACT TEST", function () {
       const proposalId = proposeReceipt.events[0].args.proposalId;
       console.log(`Current proposalId: ${proposalId}`);
 
-      // todo: vote for proposal
+      // fetch proposal status
+      let proposalState = await NudeGovernor.state(proposalId);
+      console.log(`Current state1: ${proposalState} pending`);
+
+      // after proposal is proposed, user1 cannot vote because the status is pending
+      // we need 1 more block (VOTING_DELAY=1) to wait for the proposal, so we transfer add1 some more tokens
+      await Nude.transfer(user1.address, ethers.utils.parseEther("1"));
+      // we need 2 transactions for VOTING_DELAY=1, don't know why
+      await Nude.transfer(user1.address, ethers.utils.parseEther("1"));
+      proposalState = await NudeGovernor.state(proposalId);
+      // proposal state should be active, we can vote now
+      console.log(`Current state2: ${proposalState} active`);
+
+      // vote for proposal
+      // Against is 0, Approve is 1, Abstain is 2
+
+      const voteTx = await NudeGovernor.castVoteWithReason(
+        proposalId,
+        APPROVE,
+        REASON
+      );
+      await voteTx.wait(1);
+      proposalState = await NudeGovernor.state(proposalId);
+      // proposal state should still be active
+      console.log(`Current state3: ${proposalState} active`);
+
+      // we need 3 more blocks after voting starts for voting period. Let's do 4 transfers
+      await Nude.transfer(user1.address, ethers.utils.parseEther("1"));
+      await Nude.transfer(user1.address, ethers.utils.parseEther("1"));
+      await Nude.transfer(user1.address, ethers.utils.parseEther("1"));
+      await Nude.transfer(user1.address, ethers.utils.parseEther("1"));
+
+      proposalState = await NudeGovernor.state(proposalId);
+      // proposal state should success now
+      console.log(`Current state4: ${proposalState} success`);
+
+      // put vote in queue
+      const descriptionHash = ethers.utils.id(DESC);
+      const queueTx = await NudeGovernor.queue(
+        [NudeDEX.address],
+        [0],
+        [encodedFunctionCall],
+        descriptionHash
+      );
+      await queueTx.wait(1);
+
+      await moveTime(MIN_DELAY + 1);
+
+      await Nude.transfer(user1.address, ethers.utils.parseEther("1"));
+
+      proposalState = await NudeGovernor.state(proposalId);
+      // proposal state is not queued
+      console.log(`Current state5: ${proposalState} queued`);
+
+      // execute proposal
+      const exTx = await NudeGovernor.execute(
+        [NudeDEX.address],
+        [0],
+        [encodedFunctionCall],
+        descriptionHash
+      );
+      await exTx.wait(1);
+
+      proposalState = await NudeGovernor.state(proposalId);
+      // proposal state is not excuted
+      console.log(`Current state6: ${proposalState} executed`);
+
+      // double check result
+      console.log("New tax:", (await NudeDEX.getTax()).toString());
+      expect(await NudeDEX.getTax()).to.equal(NEW_TAX);
     });
   });
 });
+
+async function moveTime(amount: number) {
+  console.log("Moving Times...");
+  await ethers.provider.send("evm_increaseTime", [amount]);
+  console.log(`Moved forward in time ${amount} seconds`);
+}
