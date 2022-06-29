@@ -1,10 +1,10 @@
 import { ethers } from "hardhat";
 // Needs total votes to pass 51%
 const QUORUM_PERCENTAGE = 51;
-// Votes will finished in 10 blocks
-const VOTING_PERIOD = 10;
-// Needs 1 block to vote after propose
-const VOTING_DELAY = 1;
+// Votes will finished in 45818 blocks
+const VOTING_PERIOD = 45818;
+// Needs 5 block to vote after propose
+const VOTING_DELAY = 5;
 
 async function main() {
   const Nude = await ethers.getContractFactory("Nude");
