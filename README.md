@@ -3,6 +3,8 @@
 Solidity contracts for the $NUDE and $NUDENFT tokens which powers Own Me's adult content NFT community!
 Built on Polygon network with Hardhat and Openzepplin.
 
+> Project is dead. We had fun, but failed the business aspect.
+
 ### NUDE - MATIC(ERC20) Token
 
 Used as the in-app currency for all transactions.
